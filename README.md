@@ -9,7 +9,7 @@
 ------------
 
 ## 效果图
-<img src="https://github.com/teanfoo/TFWritingBoard/blob/master/Images/demo.gif" width="240" height="426">
+<img src="https://github.com/teanfoo/TFWritingBoard/blob/master/Images/demo.jpeg" width="203" height="400"> <img src="https://github.com/teanfoo/TFWritingBoard/blob/master/Images/demo.gif" width="200" height="400">
 
 ------------
 
