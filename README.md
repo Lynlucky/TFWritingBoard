@@ -9,7 +9,7 @@
 ------------
 
 ## 效果图
-<img src="https://raw.githubusercontent.com/teanfoo/TF_QRScanner/master/Images/demo.gif" width="240" height="426">
+<img src="https://github.com/teanfoo/TFWritingBoard/blob/master/Images/demo.gif" width="240" height="426">
 
 ------------
 
