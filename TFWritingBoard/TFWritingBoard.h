@@ -22,11 +22,11 @@
  SOFTWARE.
  */
 /** 版本信息
- Version:   1.0
- Date:      2018.08.02
+ Version:   1.1
+ Date:      2018.09.30
  Target:    iOS 8.0 Later
  Changes:   (【A】新增，【D】删除，【M】修改，【F】修复Bug)
- 1.【A】初始版本。
+ 1.【F】修复Apple Pencil模式下，在手触摸屏幕(不抬起)后不能用笔书写的问题。
  */
 
 #import <UIKit/UIKit.h>

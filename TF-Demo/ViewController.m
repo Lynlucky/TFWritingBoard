@@ -130,6 +130,7 @@
         writingBoard.delegate = self;
         writingBoard.lineWidth = 2.0;
         writingBoard.lineColor = [UIColor blackColor];
+        // writingBoard.applePencilOnly = YES;
         [self.view addSubview:writingBoard];
         _writingBoard = writingBoard;
     }
