@@ -9,14 +9,27 @@
 #import "ViewController.h"
 #import "TFWritingBoard.h"
 
-#define kIsiPad (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+
 #define SCREEN_W [UIScreen mainScreen].bounds.size.width
 #define SCREEN_H [UIScreen mainScreen].bounds.size.height
 #define HALF_SCREEN_W ([UIScreen mainScreen].bounds.size.width/2)
 #define HALF_SCREEN_H ([UIScreen mainScreen].bounds.size.height/2)
-#define kIsiPhoneX (812.0 == MAX(SCREEN_W, SCREEN_H))
-#define kTopSafeHeight (kIsiPhoneX ? 44.0 : 0.0)
-#define kBottomSafeHeight (kIsiPhoneX ? 34.0 : 0.0)
+// 是否为iPad
+#define kIsiPad (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+// 判断是否为刘海屏
+#define kIsAbnormityiPhone  (SCREEN_H == 812.0 || SCREEN_H == 896.0)
+// 状态栏高度
+#define kStatusBarHeight    (kIsAbnormityiPhone ? 44.0 : 20.0)
+// 导航栏高度
+#define kNavBarHeight       44.0
+// TabBar高度
+#define kTabBarHeight       (kIsAbnormityiPhone ? 83.0 : 49.0)
+// 状态栏和导航栏总高度
+#define kNavBarMaxHeight    (kIsAbnormityiPhone ? 88.0 : 64.0)
+// 顶部安全区域远离高度
+#define kTopSafeHeight      (kIsAbnormityiPhone ? 44.0 : 0.0)
+// 底部安全区域远离高度
+#define kBottomSafeHeight   (kIsAbnormityiPhone ? 34.0 : 0.0)
 
 @interface ViewController () <TFWritingBoardDelegate>
 

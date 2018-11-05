@@ -39,8 +39,6 @@
 @property (nonatomic, weak) TFShapeLayer *currentLayer;
 /** 当前正在绘制的路径 */
 @property (nonatomic, strong) UIBezierPath *currentPath;
-/** 当前Touch对象 */
-@property (nonatomic, weak) UITouch *currentTouch;
 
 @end
 
@@ -133,20 +131,10 @@
 
 #pragma mark - Drawing
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    self.currentTouch = nil;
-    if (self.isApplePencilOnly) {
-        for (UITouch *obj in touches) {
-            if (obj.type == UITouchTypeStylus) {
-                self.currentTouch = obj;
-                break;
-            }
-        }
-    } else {
-        self.currentTouch = touches.anyObject;
-    }
-    if (self.currentTouch == nil) return;
+    UITouch *touch = [self getValidTouchWithTouches:touches];
+    if (!touch) return;
     
-    CGPoint currentPoint = [self.currentTouch preciseLocationInView:self];                  // 获取当前触摸的点
+    CGPoint currentPoint = [touch preciseLocationInView:self];                  // 获取当前触摸的点
     self.currentPath = [UIBezierPath bezierPath];                               // 创建新的贝塞尔路径对象
     [self.currentPath moveToPoint:currentPoint];                                // 设置Path的起始点为当前触摸的点
     if (self.isErasersMode) {// 橡皮擦模式，不显示痕迹
@@ -171,22 +159,26 @@
     self.currentLayer.path = self.currentPath.CGPath;
 }
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    if (self.currentTouch == nil) return;
-    CGPoint currentPoint = [self.currentTouch preciseLocationInView:self];
+    UITouch *touch = [self getValidTouchWithTouches:touches];
+    if (!touch) return;
+    
+    CGPoint currentPoint = [touch preciseLocationInView:self];
     if (self.isErasersMode) {// 橡皮擦模式，不显示痕迹，所以不需要转角圆滑优化
         [self.currentPath addLineToPoint:currentPoint];
         return;
     }
     // 用二次贝塞尔曲线实现转角圆滑优化
-    CGPoint controlPoint = [self.currentTouch precisePreviousLocationInView:self];          // 获取前一个点作为控制点
+    CGPoint controlPoint = [touch precisePreviousLocationInView:self];          // 获取前一个点作为控制点
     CGPoint endPoint = CGPointMake((controlPoint.x + currentPoint.x) / 2,
                                    (controlPoint.y + currentPoint.y) / 2);      // 取前后两点间的中点作为结束点
     [self.currentPath addQuadCurveToPoint:endPoint controlPoint:controlPoint];  // 当前路径画一条二次贝塞尔曲线
     self.currentLayer.path = self.currentPath.CGPath;
 }
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    if (self.currentTouch == nil) return;
-    CGPoint currentPoint = [self.currentTouch preciseLocationInView:self];
+    UITouch *touch = [self getValidTouchWithTouches:touches];
+    if (!touch) return;
+    
+    CGPoint currentPoint = [touch preciseLocationInView:self];
     [self.currentPath addLineToPoint:currentPoint];
     if (self.isErasersMode) {// 橡皮擦模式，不显示痕迹
         // 获取橡皮擦擦过的区域
@@ -213,6 +205,15 @@
 - (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     // 触摸事件被系统事件打断，调用绘制结束操作
     [self touchesEnded:touches withEvent:event];
+}
+
+#pragma mark - 获取有效的Touch对象
+- (UITouch *)getValidTouchWithTouches:(NSSet<UITouch *> *)touches {
+    if (!self.isApplePencilOnly) return touches.anyObject;
+    for (UITouch *touch in touches) {
+        if (touch.type == UITouchTypeStylus) return touch;
+    }
+    return nil;
 }
 
 @end
